@@ -3,5 +3,5 @@
 
 ### Contributors:
 
-* Siddharth Sanghavi ~ [siddinc](www.siddinc.ga)
-* Vikrant Gajria ~ [vixrant](www.vikrant.ga)
+* Siddharth Sanghavi ~ [siddinc](http://www.siddinc.ga)
+* Vikrant Gajria ~ [vixrant](https://www.vikrant.ga)
