@@ -1,14 +1,16 @@
 package database.models;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 /**
  * POJO of a Payment object of the Customer.
  * Each Payment is added to the list in Customer item.
  */
 public class Payment {
+    private UUID _id = UUID.randomUUID ();
     private double amount;
-    private LocalDate payDate;
+    private LocalDate payDate = LocalDate.now ();
     private int daysAddition;
 
     // ---
@@ -36,6 +38,10 @@ public class Payment {
         this.daysAddition = daysAddition;
     }
 
+    public void set_id (UUID _id) {
+        this._id = _id;
+    }
+
     // ---
 
     public double getAmount () {
@@ -48,5 +54,24 @@ public class Payment {
 
     public int getDaysAddition () {
         return daysAddition;
+    }
+
+    public UUID get_id () {
+        return _id;
+    }
+
+    // ---
+
+    /**
+     * Thrown when a Payment doesn't exist.
+     */
+    public static class PaymentNotFoundException extends Exception {
+        /**
+         * @param paymenyId UUID of the payment to be removed.
+         * @param victim Customer who's history was searched.
+         */
+        public PaymentNotFoundException(UUID paymenyId, Customer victim) {
+            super (String.format ("Payment with UUID %s not found in the customer %s!", paymenyId, victim));
+        }
     }
 }

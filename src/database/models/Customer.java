@@ -2,6 +2,10 @@ package database.models;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.UUID;
 
 /**
  * POJO of Customer model to be saved in database.
@@ -15,12 +19,36 @@ public class Customer {
     private LocalDate joiningDate;
     private LocalDate membershipEndDate;
 
-    // TODO: Add payments list.
+    private List<Payment> paymentsHistory = new LinkedList<Payment> ();
 
-    // TODO: Remove defaults.
     public Customer () {
         joiningDate = LocalDate.now ();
         membershipEndDate = LocalDate.now ();
+    }
+
+    // -----
+
+    /**
+     * @param payment Payment POJO to add to Customer's history.
+     */
+    public void addPayment (Payment payment) {
+        paymentsHistory.add (payment);
+    }
+
+    /**
+     * @param targetIdString UUID of payment to remove.
+     * @throws Payment.PaymentNotFoundExcept If payment does not exist in the Customer's history.
+     */
+    public void removePayment (String targetIdString) throws Payment.PaymentNotFoundException {
+        UUID targetId = UUID.fromString (targetIdString);
+        ListIterator<Payment> it = paymentsHistory.listIterator ();
+        while (it.hasNext ()) {
+            if (it.next ().get_id ().compareTo (targetId) == 0) {
+                it.remove ();
+                return;
+            }
+        }
+        throw new Payment.PaymentNotFoundException (targetId, this);
     }
 
     // -----
@@ -71,7 +99,7 @@ public class Customer {
 
     @Override
     public String toString () {
-        return String.format ("%s %s: Joined %s", firstName, lastName, joiningDate);
+        return String.format ("%s %s", firstName, lastName);
     }
 
     // -----
@@ -136,4 +164,5 @@ public class Customer {
         FEMALE,
         OTHER;
     }
+
 }
