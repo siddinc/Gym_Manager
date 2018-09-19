@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'com.fuckers.gym'
@@ -7,7 +8,23 @@ version '1.0'
 
 sourceCompatibility = 1.8
 
-mainClassName = 'Index'
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+
+run {
+    mainClassName = 'Index'
+}
 
 repositories {
     mavenCentral()
@@ -15,4 +32,6 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    compile 'org.mongodb:mongodb-driver-sync:3.8.1'
 }
