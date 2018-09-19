@@ -2,6 +2,10 @@ package database.models;
 
 import java.time.LocalDate;
 
+/**
+ * POJO of a Payment object of the Customer.
+ * Each Payment is added to the list in Customer item.
+ */
 public class Payment {
     private double amount;
     private LocalDate payDate;
@@ -9,6 +13,11 @@ public class Payment {
 
     // ---
 
+    /**
+     * New membership end date is not saved in the payments collection.
+     * Rather we save it in the Customer model for easier access.
+     * @return Payment date + The amount of days added.
+     */
     public LocalDate getNewEndDate () {
         return LocalDate.ofEpochDay (payDate.toEpochDay () + daysAddition);
     }

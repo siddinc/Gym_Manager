@@ -8,17 +8,14 @@ class Index {
 
     public static void main (String [] args) {
         Customer x = new Customer ();
-        x.setFirstName ("Vikrant");
-        x.setLastName ("Gajria");
-        x.setGender (Customer.Gender.MALE);
-        x.setJoiningDate (LocalDate.of (2018, Month.SEPTEMBER, 20));
+        x.setJoiningDate (LocalDate.of (2018, Month.SEPTEMBER, 10));
+        x.setMembershipEndDate (LocalDate.of (2018, Month.DECEMBER, 25));
 
         Gson gson = new Gson ();
 
         System.out.println (gson.toJson (x));
         System.out.println (x.calculateDaysFromJoining ());
         System.out.println (x.calculateDaysTillEnd ());
-
     }
 
 }
