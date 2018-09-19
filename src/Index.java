@@ -14,8 +14,8 @@ class Index {
         Gson gson = new Gson ();
 
         System.out.println (gson.toJson (x));
-        System.out.println (x.calculateDaysFromJoining ());
-        System.out.println (x.calculateDaysTillEnd ());
+        System.out.println (x.daysFromJoining ());
+        System.out.println (x.daysTillEnd ());
     }
 
 }

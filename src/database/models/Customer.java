@@ -59,8 +59,8 @@ public class Customer {
      *
      * @return Number of days between current date and date of joining.
      */
-    public long calculateDaysFromJoining () {
-        return calculateDaysFromJoining (LocalDate.now ());
+    public long daysFromJoining () {
+        return daysFromJoining (LocalDate.now ());
     }
 
     /**
@@ -70,7 +70,7 @@ public class Customer {
      * @param ref Reference date.
      * @return Number of days past the provided date.
      */
-    public long calculateDaysFromJoining (LocalDate ref) {
+    public long daysFromJoining (LocalDate ref) {
         return ChronoUnit.DAYS.between (joiningDate, ref);
     }
 
@@ -80,8 +80,8 @@ public class Customer {
      *
      * @return Number of days till the end date of membership.
      */
-    public long calculateDaysTillEnd () {
-        return calculateDaysTillEnd (LocalDate.now ());
+    public long daysTillEnd () {
+        return daysTillEnd (LocalDate.now ());
     }
 
     /**
@@ -91,7 +91,7 @@ public class Customer {
      * @param ref Reference date.
      * @return
      */
-    public long calculateDaysTillEnd (LocalDate ref) {
+    public long daysTillEnd (LocalDate ref) {
         return ChronoUnit.DAYS.between (ref, membershipEndDate);
     }
 

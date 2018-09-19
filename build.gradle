@@ -17,13 +17,18 @@ sourceSets {
 
     test {
         java {
-            srcDirs = ['src']
+            srcDirs = ['test', 'src']
         }
     }
 }
 
 run {
     mainClassName = 'Index'
+}
+
+test {
+    useJUnit()
+    mainClassName = 'TestIndex'
 }
 
 repositories {
@@ -33,5 +38,5 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     implementation 'com.google.code.gson:gson:2.8.5'
-    compile 'org.mongodb:mongodb-driver-sync:3.8.1'
+//    implementation 'org.hibernate:hibernate-core:5.3.6.Final'
 }
