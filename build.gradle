@@ -36,7 +36,6 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.hibernate:hibernate-core:5.3.6.Final'
     compile group: 'org.hibernate.dialect', name: 'sqlite-dialect', version: '0.1.0'
 }
