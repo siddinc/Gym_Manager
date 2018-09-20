@@ -11,13 +11,13 @@ sourceCompatibility = 1.8
 sourceSets {
     main {
         java {
-            srcDirs = ['src']
+            srcDir 'src/main'
         }
     }
 
     test {
         java {
-            srcDirs = ['src', 'test']
+            srcDirs = ['src/main', 'src/test']
         }
     }
 }
@@ -37,6 +37,5 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.16.Final'
-    compile group: 'org.hibernate.dialect', name: 'sqlite-dialect', version: '0.1.0'
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.21.0.1'
 }
