@@ -4,14 +4,19 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 /**
- * POJO of a Payment object of the Customer.
+ * Model of a Payment object of the Customer.
  * Each Payment is added to the list in Customer item.
  */
 public class Payment {
-    private UUID _id = UUID.randomUUID ();
+    private String _id;
     private double amount;
-    private LocalDate payDate = LocalDate.now ();
+    private LocalDate payDate;
     private int daysAddition;
+
+    public Payment () {
+        _id = UUID.randomUUID ().toString ();
+        payDate = LocalDate.now ();
+    }
 
     // ---
 
@@ -38,7 +43,7 @@ public class Payment {
         this.daysAddition = daysAddition;
     }
 
-    public void set_id (UUID _id) {
+    public void set_id (String _id) {
         this._id = _id;
     }
 
@@ -56,7 +61,7 @@ public class Payment {
         return daysAddition;
     }
 
-    public UUID get_id () {
+    public String get_id () {
         return _id;
     }
 
@@ -70,7 +75,7 @@ public class Payment {
          * @param paymenyId UUID of the payment to be removed.
          * @param victim Customer who's history was searched.
          */
-        public PaymentNotFoundException(UUID paymenyId, Customer victim) {
+        public PaymentNotFoundException(String paymenyId, Customer victim) {
             super (String.format ("Payment with UUID %s not found in the customer %s!", paymenyId, victim));
         }
     }

@@ -1,5 +1,7 @@
 package database.models;
 
+import javax.persistence.*;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -8,22 +10,27 @@ import java.util.ListIterator;
 import java.util.UUID;
 
 /**
- * POJO of Customer model to be saved in database.
+ * Customer POJO model to be saved in database.
  */
+@Entity
+@Table(name = "CUSTOMER")
 public class Customer {
-    private String firstName;
-    private String lastName;
-    private Gender gender;
-    private LocalDate birthDate;
+    @Id private String _id;
+    @Column(name = "FIRST_NAME", nullable = false) private String firstName;
+    @Column(name = "LAST_NAME", nullable = false) private String lastName;
+    @Column(name = "GENDER") @Enumerated(EnumType.STRING)  private Gender gender;
+    @Column(name = "BIRTH_DATE") private LocalDate birthDate;
 
-    private LocalDate joiningDate;
-    private LocalDate membershipEndDate;
+    @Column(name = "JOINING_DATE") private LocalDate joiningDate;
+    @Column(name = "MEMBERSHIP_END_DATE") private LocalDate membershipEndDate;
 
-    private List<Payment> paymentsHistory = new LinkedList<Payment> ();
+    @Column(name = "PAYMENTS_HISTORY") @ElementCollection(targetClass = Payment.class) private List<Payment> paymentsHistory;
 
     public Customer () {
+        _id = UUID.randomUUID ().toString ();
         joiningDate = LocalDate.now ();
         membershipEndDate = LocalDate.now ();
+        paymentsHistory = new LinkedList<Payment> ();
     }
 
     // -----
@@ -36,14 +43,13 @@ public class Customer {
     }
 
     /**
-     * @param targetIdString UUID of payment to remove.
-     * @throws Payment.PaymentNotFoundExcept If payment does not exist in the Customer's history.
+     * @param targetId UUID of payment to remove.
+     * @throws Payment.PaymentNotFoundException If payment does not exist in the Customer's history.
      */
-    public void removePayment (String targetIdString) throws Payment.PaymentNotFoundException {
-        UUID targetId = UUID.fromString (targetIdString);
+    public void removePayment (String targetId) throws Payment.PaymentNotFoundException {
         ListIterator<Payment> it = paymentsHistory.listIterator ();
         while (it.hasNext ()) {
-            if (it.next ().get_id ().compareTo (targetId) == 0) {
+            if (it.next ().get_id ().equals (targetId)) {
                 it.remove ();
                 return;
             }
@@ -78,7 +84,7 @@ public class Customer {
      * Returns a positive long integer if today's date is before end of membership.
      * Returns a negative long integer if the membership date has passed.
      *
-     * @return Number of days till the end date of membership.
+     * @return Number of days till the end date of membership from current date.
      */
     public long daysTillEnd () {
         return daysTillEnd (LocalDate.now ());
@@ -89,7 +95,7 @@ public class Customer {
      * Returns a negative long integer if the membership date has passed.
      *
      * @param ref Reference date.
-     * @return
+     * @return Number of days till the end date of membership from reference date.
      */
     public long daysTillEnd (LocalDate ref) {
         return ChronoUnit.DAYS.between (ref, membershipEndDate);
@@ -103,6 +109,10 @@ public class Customer {
     }
 
     // -----
+
+    public void set_id (String _id) {
+        this._id = _id;
+    }
 
     public void setFirstName (String firstName) {
         this.firstName = firstName;
@@ -128,7 +138,16 @@ public class Customer {
         this.membershipEndDate = membershipEndDate;
     }
 
+    public void setPaymentsHistory (List<Payment> paymentsHistory) {
+        this.paymentsHistory = paymentsHistory;
+    }
+
     // -----
+
+
+    public String get_id () {
+        return _id;
+    }
 
     public String getFirstName () {
         return firstName;
@@ -152,6 +171,10 @@ public class Customer {
 
     public LocalDate getMembershipEndDate () {
         return membershipEndDate;
+    }
+
+    public List<Payment> getPaymentsHistory () {
+        return paymentsHistory;
     }
 
     // -----
