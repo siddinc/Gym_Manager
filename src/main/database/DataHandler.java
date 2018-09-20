@@ -1,14 +1,13 @@
 package database;
 
 import database.models.Customer;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -16,39 +15,28 @@ import java.util.List;
  */
 public class DataHandler {
     private static final String PERSISTENCE_UNIT_NAME = "sample";
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory (PERSISTENCE_UNIT_NAME);
+    private static SessionFactory sf = HibernateUtils.getSessionFactory ();
 
-    private EntityManager em;
+    private Session session;
 
     public DataHandler () {
-        Configuration configuration = new Configuration();
-        configuration.configure("hibernate.cfg.xml");
-        em = emf.createEntityManager ();
+        session = sf.openSession ();
     }
 
     public void addCustomer (Customer c) {
-        em.getTransaction ().begin ();
-        em.persist (c);
-        em.getTransaction ().commit ();
+        Transaction tx = session.beginTransaction ();
+        session.persist (c);
+        tx.commit ();
     }
 
     public List<Customer> getCustomerList () {
-        List<Customer> res = em.createNamedQuery ("Customer.findAll").getResultList ();
-        return res;
+        Query q = session.createQuery ("from CUSTOMERS");
+
+        Iterator<Customer> it = q.iterate ();
+        List<Customer> csl = new ArrayList<Customer> ();
+        while (it.hasNext ()) csl.add (it.next ());
+
+        return csl;
     }
 
-    protected void setUp() throws {
-        // A SessionFactory is set up once for an application!
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder ()
-                .configure() // configures settings from hibernate.cfg.xml
-                .build();
-        try {
-            sessionFactory = new MetadataSources ( registry ).buildMetadata().buildSessionFactory();
-        }
-        catch (Exception e) {
-            // The registry would be destroyed by the SessionFactory, but we had trouble building the SessionFactory
-            // so destroy it manually.
-            StandardServiceRegistryBuilder.destroy( registry );
-        }
-    }
 }
