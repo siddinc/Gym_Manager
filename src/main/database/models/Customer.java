@@ -20,8 +20,15 @@ public class Customer {
     private LocalDate joiningDate;
     private LocalDate membershipEndDate;
 
+
+    // TODO: Default values.
     public Customer () {
         id = UUID.randomUUID ().toString ();
+        firstName = "John";
+        lastName = "Smith";
+        gender = Gender.OTHER;
+
+        birthDate = LocalDate.now ();
         joiningDate = LocalDate.now ();
         membershipEndDate = LocalDate.now ();
     }
