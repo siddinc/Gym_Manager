@@ -4,9 +4,6 @@ import javax.persistence.*;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.UUID;
 
 /**
@@ -24,37 +21,10 @@ public class Customer {
     @Column(name = "JOINING_DATE") private LocalDate joiningDate;
     @Column(name = "MEMBERSHIP_END_DATE") private LocalDate membershipEndDate;
 
-    @Column(name = "PAYMENTS_HISTORY") @ElementCollection(targetClass = Payment.class) private List<Payment> paymentsHistory;
-
     public Customer () {
         _id = UUID.randomUUID ().toString ();
         joiningDate = LocalDate.now ();
         membershipEndDate = LocalDate.now ();
-        paymentsHistory = new LinkedList<Payment> ();
-    }
-
-    // -----
-
-    /**
-     * @param payment Payment POJO to add to Customer's history.
-     */
-    public void addPayment (Payment payment) {
-        paymentsHistory.add (payment);
-    }
-
-    /**
-     * @param targetId UUID of payment to remove.
-     * @throws Payment.PaymentNotFoundException If payment does not exist in the Customer's history.
-     */
-    public void removePayment (String targetId) throws Payment.PaymentNotFoundException {
-        ListIterator<Payment> it = paymentsHistory.listIterator ();
-        while (it.hasNext ()) {
-            if (it.next ().get_id ().equals (targetId)) {
-                it.remove ();
-                return;
-            }
-        }
-        throw new Payment.PaymentNotFoundException (targetId, this);
     }
 
     // -----
@@ -138,10 +108,6 @@ public class Customer {
         this.membershipEndDate = membershipEndDate;
     }
 
-    public void setPaymentsHistory (List<Payment> paymentsHistory) {
-        this.paymentsHistory = paymentsHistory;
-    }
-
     // -----
 
 
@@ -171,10 +137,6 @@ public class Customer {
 
     public LocalDate getMembershipEndDate () {
         return membershipEndDate;
-    }
-
-    public List<Payment> getPaymentsHistory () {
-        return paymentsHistory;
     }
 
     // -----

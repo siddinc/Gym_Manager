@@ -1,26 +1,17 @@
 package database;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.service.ServiceRegistry;
-
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 
 public class HibernateUtils {
 
-    private static final SessionFactory sessionFactory = buildSessionFactory();
+    private HibernateUtils() {}
 
-    // Hibernate 5:
-    private static SessionFactory buildSessionFactory() {
+    private static final SessionFactory sessionFactory;
+
+    static {
         try {
-            // Create the ServiceRegistry from hibernate.cfg.xml
-            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
-
-            // Create a metadata sources using the specified service registry.
-            Metadata metadata = new MetadataSources (serviceRegistry).getMetadataBuilder().build();
-
-            return metadata.getSessionFactoryBuilder().build();
+            sessionFactory = new Configuration().configure().buildSessionFactory();
         } catch (Throwable ex) {
             System.err.println("Initial SessionFactory creation failed." + ex);
             throw new ExceptionInInitializerError(ex);
@@ -32,8 +23,7 @@ public class HibernateUtils {
     }
 
     public static void shutdown() {
-        // Close caches and connection pools
+
         getSessionFactory().close();
     }
-
 }

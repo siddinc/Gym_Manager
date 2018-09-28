@@ -1,15 +1,10 @@
 import database.models.Customer;
 
-import database.models.Payment;
-
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
 
 public class CustomerTests {
 
@@ -44,16 +39,6 @@ public class CustomerTests {
         return tester;
     }
 
-    private Payment createPayment () {
-        Payment p = new Payment ();
-
-        p.setAmount ( (Math.random () * 10000) + 1);
-        p.setDaysAddition ( (int) Math.floor (Math.random () * 10 + 1) );
-        p.setPayDate (LocalDate.now ().plusDays ( (int) Math.floor (Math.random () * 100 + 1) ));
-
-        return p;
-    }
-
     // ---
 
     @Test
@@ -75,42 +60,6 @@ public class CustomerTests {
         final String msg = "Failure - Days till end date are not the same";
 
         assertEquals (msg, NUMBER_OF_DAYS, tester.daysTillEnd (JOININGDATE));
-    }
-
-    @Test
-    public void addPaymentSingle () {
-        final Customer tester = createCustomer ();
-        final String msg = "Failure - Payments history didn't work as expected";
-
-        final Payment p = createPayment ();
-
-        tester.addPayment (p);
-        assertTrue (msg, tester.getPaymentsHistory ().contains (p));
-        assertEquals (msg, 1, tester.getPaymentsHistory ().size ());
-    }
-
-    @Test
-    public void addPaymentMultiple () {
-        final Customer tester = createCustomer ();
-        final String msg_not_same = "Failure - Payment not same";
-        final String msg_excess = "Failure - Customer has extra payments";
-
-        List<Payment> pmts = new ArrayList<Payment> ();
-        for (int i = 0; i < 10; i++) {
-            Payment p = createPayment ();
-            pmts.add (p);
-            tester.addPayment (p);
-        }
-
-        ListIterator<Payment>
-                expected = pmts.listIterator (),
-                actual = tester.getPaymentsHistory ().listIterator ();
-
-        assertEquals (msg_excess, pmts.size (), tester.getPaymentsHistory ().size ());
-
-        while (expected.hasNext ()) {
-            assertTrue (msg_not_same, expected.next ().equals (actual.next ()));
-        }
     }
 
 }
