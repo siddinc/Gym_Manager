@@ -1,28 +1,27 @@
 package database.models;
 
-import javax.persistence.*;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 /**
  * Customer POJO model to be saved in database.
+ *
+ * @author vikrant
  */
-@Entity
-@Table(name = "CUSTOMER")
 public class Customer {
-    @Id private String _id;
-    @Column(name = "FIRST_NAME", nullable = false) private String firstName;
-    @Column(name = "LAST_NAME", nullable = false) private String lastName;
-    @Column(name = "GENDER") @Enumerated(EnumType.STRING)  private Gender gender;
-    @Column(name = "BIRTH_DATE") private LocalDate birthDate;
+    private String id;
+    private String firstName;
+    private String lastName;
 
-    @Column(name = "JOINING_DATE") private LocalDate joiningDate;
-    @Column(name = "MEMBERSHIP_END_DATE") private LocalDate membershipEndDate;
+    private Gender gender;
+
+    private LocalDate birthDate;
+    private LocalDate joiningDate;
+    private LocalDate membershipEndDate;
 
     public Customer () {
-        _id = UUID.randomUUID ().toString ();
+        id = UUID.randomUUID ().toString ();
         joiningDate = LocalDate.now ();
         membershipEndDate = LocalDate.now ();
     }
@@ -80,8 +79,8 @@ public class Customer {
 
     // -----
 
-    public void set_id (String _id) {
-        this._id = _id;
+    public void setId (String id) {
+        this.id = id;
     }
 
     public void setFirstName (String firstName) {
@@ -111,8 +110,8 @@ public class Customer {
     // -----
 
 
-    public String get_id () {
-        return _id;
+    public String getId () {
+        return id;
     }
 
     public String getFirstName () {

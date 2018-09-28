@@ -1,42 +1,40 @@
 package database;
 
 import database.models.Customer;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.sql.*;
 
 /**
  * Handler provides a simplified interface for interacting with the database.
+ *
+ * @author vikrant
  */
 public class DataHandler {
-    private static final String PERSISTENCE_UNIT_NAME = "sample";
-    private static SessionFactory sf = HibernateUtils.getSessionFactory ();
+    // TODO: Remove hardcoded URL to Properties.
+    private final String DATABASE_URL = "jdbc:sqlite:gym.sqlite3";
 
-    private Session session;
+    private PreparedStatement
+        createStm,
+        insertStm,
+        listStm,
+        getStm,
+        updateStm,
+        deleteStm;
 
-    public DataHandler () {
-        session = sf.openSession ();
+    public DataHandler() {
+        try (Connection conn = DriverManager.getConnection (DATABASE_URL)) {
+            // Get statements.
+            createStm = conn.prepareStatement (Query.CREATE);
+            insertStm = conn.prepareStatement (Query.INSERT);
+            listStm   = conn.prepareStatement (Query.LIST);
+            getStm    = conn.prepareStatement (Query.GET);
+            updateStm = conn.prepareStatement (Query.UPDATE);
+            deleteStm = conn.prepareStatement (Query.DELETE);
+
+            // Create Table.
+            createStm.executeUpdate ();
+        } catch (SQLException e) {
+            System.err.println ();
+        };
     }
-
-    public void addCustomer (Customer c) {
-        Transaction tx = session.beginTransaction ();
-        session.persist (c);
-        tx.commit ();
-    }
-
-    public List<Customer> getCustomerList () {
-        Query q = session.createQuery ("from CUSTOMERS");
-
-        Iterator<Customer> it = q.iterate ();
-        List<Customer> csl = new ArrayList<Customer> ();
-        while (it.hasNext ()) csl.add (it.next ());
-
-        return csl;
-    }
-
 }
