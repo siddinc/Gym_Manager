@@ -1,5 +1,8 @@
 package database.models;
 
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
@@ -27,7 +30,7 @@ public class Customer {
         firstName = "John";
         lastName = "Smith";
         gender = Gender.OTHER;
-
+        
         birthDate = LocalDate.now ();
         joiningDate = LocalDate.now ();
         membershipEndDate = LocalDate.now ();
@@ -143,6 +146,23 @@ public class Customer {
 
     public LocalDate getMembershipEndDate () {
         return membershipEndDate;
+    }
+
+    // -----
+
+    public void fromResultSet (ResultSet resultSet) {
+        try {
+            id = resultSet.getString ("id");
+            firstName = resultSet.getString ("firstname");
+            lastName = resultSet.getString ("lastname");
+            gender = Customer.Gender.valueOf (resultSet.getString ("gender"));
+            birthDate = resultSet.getDate ("birthDate").toLocalDate ();
+            joiningDate = resultSet.getDate ("joiningDate").toLocalDate ();
+            membershipEndDate = resultSet.getDate ("membershipEndDate").toLocalDate ();
+        } catch (SQLException e) {
+            System.err.println (e);
+            e.printStackTrace ();
+        };
     }
 
     // -----

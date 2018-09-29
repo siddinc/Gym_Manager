@@ -12,8 +12,8 @@ public final class Query {
                     " ( " +
 
                     "id varchar(36) PRIMARY KEY," +
-                    "firstname text," +
-                    "lastname text," + // can do NOT NULL
+                    "firstName text," +
+                    "lastName text," + // can do NOT NULL
 
                     "gender text," +
 
@@ -25,7 +25,11 @@ public final class Query {
     ),
 
     INSERT = (
-            "INSERT INTO " + "customers" + " ( " + "?, ?, ?, ?, ?, ?" + " ); "
+            "INSERT INTO " +
+                    "customers" +
+                    " ( " +
+                    "?, ?, ?, ?, ?, ?" +
+                    " ); "
     ),
 
     LIST = (
@@ -33,7 +37,10 @@ public final class Query {
     ),
 
     GET = (
-            "SELECT FROM customers WHERE id = ?;"
+            "SELECT FROM " +
+                    "customers" +
+                    " WHERE " +
+                    "id = ?;"
     ),
 
     UPDATE = (
@@ -41,8 +48,8 @@ public final class Query {
                     "customers" +
 
                     " SET " +
-                    "firstname = ?," +
-                    "lastname = ?," +
+                    "firstName = ?," +
+                    "lastName = ?," +
                     "gender = ?," +
                     "birthDate = ?," +
                     "joiningDate = ?," +
