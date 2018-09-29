@@ -3,6 +3,7 @@ package database;
 import database.models.Customer;
 
 import java.sql.*;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,8 @@ import java.util.List;
  */
 public class DataHandler {
     // TODO: Remove hardcoded URL to Properties.
-    private final String DATABASE_URL = "jdbc:sqlite:gym.sqlite3";
+    protected final String DATABASE_URL = "jdbc:sqlite:/Users/vikrant/Documents/gym.db";
+    protected Connection conn;
 
     private PreparedStatement
         createStm,
@@ -22,63 +24,121 @@ public class DataHandler {
         listStm,
         getStm,
         updateStm,
-        deleteStm;
+        deleteStm,
+        dropStm;
 
-    public DataHandler() {
-        try (Connection conn = DriverManager.getConnection (DATABASE_URL)) {
-            // Get statements.
-            createStm = conn.prepareStatement (Query.CREATE);
-            insertStm = conn.prepareStatement (Query.INSERT);
-            listStm   = conn.prepareStatement (Query.LIST);
-            getStm    = conn.prepareStatement (Query.GET);
-            updateStm = conn.prepareStatement (Query.UPDATE);
-            deleteStm = conn.prepareStatement (Query.DELETE);
-
-            // Create Table.
-            createStm.executeUpdate ();
-        } catch (SQLException e) {
-            System.err.println (e);
-            e.printStackTrace ();
-        };
-    }
-
-    /**
-     * @return List of Customer POJOs from database.
-     */
-    public List<Customer> getList () {
-        List<Customer> customerList = new ArrayList<Customer> ();
-
-        try (ResultSet resultSet = listStm.executeQuery ()) {
-            while (resultSet.next ()) {
-                Customer c = new Customer ();
-                c.fromResultSet (resultSet);
-                customerList.add (c);
-            }
-        } catch (SQLException e) {
-            System.err.println(e);
+    public DataHandler() throws SQLException {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
             e.printStackTrace ();
         }
+        conn = DriverManager.getConnection (DATABASE_URL);
 
-        return customerList;
+        createStm = conn.prepareStatement (Query.CREATE);
+        // Create Table.
+        createStm.execute ();
+
+        insertStm = conn.prepareStatement (Query.INSERT);
+        listStm   = conn.prepareStatement (Query.LIST);
+        getStm    = conn.prepareStatement (Query.GET);
+        updateStm = conn.prepareStatement (Query.UPDATE);
+        deleteStm = conn.prepareStatement (Query.DELETE);
+        dropStm   = conn.prepareStatement (Query.DROP);
+    }
+
+    // -----
+
+    public void closeConnection () throws SQLException {
+        conn.close ();
+    }
+
+    // -----
+
+    /**
+     * Create SQLite table.
+     * @throws SQLException
+     */
+    public void createTable () throws SQLException {
+        createStm.execute ();
     }
 
     /**
      * @param customer Customer POJO to add to SQLite database.
      */
-    public void addCustomer (Customer customer) {
-        try {
-            insertStm.setString (1, customer.getId ());
-            insertStm.setString (2, customer.getFirstName ());
-            insertStm.setString (3, customer.getLastName ());
-            insertStm.setString (4, customer.getGender ().toString ());
-            insertStm.setDate (5, Date.valueOf (customer.getBirthDate ()));
-            insertStm.setDate (6, Date.valueOf (customer.getJoiningDate ()));
-            insertStm.setDate (7, Date.valueOf (customer.getMembershipEndDate ()));
+    public void addCustomer (Customer customer) throws SQLException {
+        insertStm.setString (1, customer.getId ());
+        insertStm.setString (2, customer.getFirstName ());
+        insertStm.setString (3, customer.getLastName ());
+        insertStm.setString (4, customer.getGender ().toString ());
+        insertStm.setDate   (5, Date.valueOf (customer.getBirthDate ()));
+        insertStm.setDate   (6, Date.valueOf (customer.getJoiningDate ()));
+        insertStm.setDate   (7, Date.valueOf (customer.getMembershipEndDate ()));
 
-            insertStm.executeUpdate ();
-        } catch (SQLException e) {
-            System.err.println (e);
-            e.printStackTrace ();
-        }
+        insertStm.executeUpdate ();
     }
+
+    /**
+     * @return List of Customer POJOs from database.
+     */
+    public List<Customer> getList () throws SQLException {
+        List<Customer> customerList = new ArrayList<Customer> ();
+
+        ResultSet resultSet = listStm.executeQuery ();
+        while (resultSet.next ()) {
+            Customer c = Customer.fromResultSet (resultSet);
+            customerList.add (c);
+        }
+        resultSet.close ();
+
+        return customerList;
+    }
+
+    /**
+     * @param id UUID of the customer to retrieve
+     * @return Customer POJO from the database.
+     * @throws SQLException
+     */
+    public Customer getById (String id) throws SQLException {
+        getStm.setString (1, id);
+        ResultSet resultSet = getStm.executeQuery ();
+        Customer c = null;
+        if (resultSet.next ())
+             c = Customer.fromResultSet (resultSet);
+        return c;
+    }
+
+    /**
+     * @param customer Customer record to update.
+     * @throws SQLException
+     */
+    public void updateCustomer (Customer customer) throws SQLException {
+        updateStm.setString (1, customer.getFirstName ());
+        updateStm.setString (2, customer.getLastName ());
+        updateStm.setString (3, customer.getGender ().toString ());
+        updateStm.setDate   (4, Date.valueOf (customer.getBirthDate ()));
+        updateStm.setDate   (5, Date.valueOf (customer.getJoiningDate ()));
+        updateStm.setDate   (6, Date.valueOf (customer.getMembershipEndDate ()));
+
+        updateStm.executeUpdate ();
+    }
+
+    /**
+     * @param id UUID of the customer to be deleted.
+     * @throws SQLException
+     */
+    public void deleteById (String id) throws SQLException {
+        deleteStm.setString (1, id);
+        deleteStm.executeUpdate ();
+    }
+
+    /**
+     * Delete the whole table.
+     * NOTE: After dropping table be sure to create a new table before any operations.
+     * @throws SQLException
+     */
+    public void dropTable () throws SQLException {
+        dropStm.execute ();
+    }
+
 }

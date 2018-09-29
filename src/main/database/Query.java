@@ -7,7 +7,7 @@ public final class Query {
 
     public static final String
     CREATE = (
-            "CREATE TABLE IF NOT EXIST " +
+            "CREATE TABLE IF NOT EXISTS " +
                     "customers" +
                     " ( " +
 
@@ -27,8 +27,8 @@ public final class Query {
     INSERT = (
             "INSERT INTO " +
                     "customers" +
-                    " ( " +
-                    "?, ?, ?, ?, ?, ?" +
+                    " VALUES ( " +
+                    "?, ?, ?, ?, ?, ?, ?" +
                     " ); "
     ),
 
@@ -37,16 +37,14 @@ public final class Query {
     ),
 
     GET = (
-            "SELECT FROM " +
-                    "customers" +
+            "SELECT DISTINCT * FROM customers" +
                     " WHERE " +
                     "id = ?;"
     ),
 
     UPDATE = (
-            "UPDATE" +
+            "UPDATE " +
                     "customers" +
-
                     " SET " +
                     "firstName = ?," +
                     "lastName = ?," +
@@ -65,8 +63,7 @@ public final class Query {
 
     DROP = (
             "DELETE FROM customers;"
-    )
-            ;
+    );
 
     private Query () {
         /*

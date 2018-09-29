@@ -84,7 +84,7 @@ public class Customer {
 
     @Override
     public String toString () {
-        return String.format ("%s %s", firstName, lastName);
+        return String.format ("%s: %s %s", id, firstName, lastName);
     }
 
     // -----
@@ -101,8 +101,8 @@ public class Customer {
         this.lastName = lastName;
     }
 
-    public Gender getGender () {
-        return gender;
+    public void setGender (Gender gender) {
+        this.gender = gender;
     }
 
     public void setBirthDate (LocalDate birthDate) {
@@ -132,8 +132,8 @@ public class Customer {
         return lastName;
     }
 
-    public void setGender (Gender gender) {
-        this.gender = gender;
+    public Gender getGender () {
+        return gender;
     }
 
     public LocalDate getBirthDate () {
@@ -150,19 +150,26 @@ public class Customer {
 
     // -----
 
-    public void fromResultSet (ResultSet resultSet) {
+    public static Customer fromResultSet (ResultSet resultSet) {
+        Customer c = null;
+
         try {
-            id = resultSet.getString ("id");
-            firstName = resultSet.getString ("firstname");
-            lastName = resultSet.getString ("lastname");
-            gender = Customer.Gender.valueOf (resultSet.getString ("gender"));
-            birthDate = resultSet.getDate ("birthDate").toLocalDate ();
-            joiningDate = resultSet.getDate ("joiningDate").toLocalDate ();
-            membershipEndDate = resultSet.getDate ("membershipEndDate").toLocalDate ();
+            c = new Customer ();
+            c.id = resultSet.getString ("id");
+            c.firstName = resultSet.getString ("firstname");
+            c.lastName = resultSet.getString ("lastname");
+            c.gender = Customer.Gender.valueOf (resultSet.getString ("gender"));
+            c.birthDate = resultSet.getDate ("birthDate").toLocalDate ();
+            c.joiningDate = resultSet.getDate ("joiningDate").toLocalDate ();
+            c.membershipEndDate = resultSet.getDate ("membershipEndDate").toLocalDate ();
         } catch (SQLException e) {
             System.err.println (e);
             e.printStackTrace ();
-        };
+        }
+
+        System.out.println (c);
+
+        return c;
     }
 
     // -----

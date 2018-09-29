@@ -8,58 +8,32 @@ import java.time.Month;
 
 public class CustomerTests {
 
-    private static String
-        FIRSTNAME = "ABCDEF",
-        LASTNAME = "UVWXYZ";
-
-    private static Customer.Gender
-        GENDER = Customer.Gender.OTHER;
-
-    private static int
-            NUMBER_OF_DAYS = 100;
-
-    private static LocalDate
-        BIRTHDATE = LocalDate.of (1999, Month.SEPTEMBER, 30),
-        JOININGDATE = LocalDate.now (),
-        MEMBERSHIPENDDATE = JOININGDATE.plusDays (NUMBER_OF_DAYS);
-
-    // ---
-
-    private Customer createCustomer () {
-        Customer tester = new Customer ();
-
-        tester.setFirstName (FIRSTNAME);
-        tester.setLastName (LASTNAME);
-        tester.setGender (GENDER);
-        tester.setBirthDate (BIRTHDATE);
-
-        tester.setJoiningDate (JOININGDATE);
-        tester.setMembershipEndDate (MEMBERSHIPENDDATE);
-
-        return tester;
-    }
-
-    // ---
 
     @Test
     public void testCreation () {
-        final Customer tester = createCustomer ();
+        final Customer tester = TestUtility.createCustomer ();
     }
 
     @Test
     public void testDaysFromJoining () {
-        final Customer tester = createCustomer ();
-        final String msg = "Failure - Days from joining date are not the same";
+        final Customer tester = TestUtility.createCustomer ();
 
-        assertEquals (msg, NUMBER_OF_DAYS, tester.daysFromJoining (JOININGDATE.plusDays (NUMBER_OF_DAYS)));
+        assertEquals (
+                TestUtility.errorMessage ("Days from joining date are not the same"),
+                TestUtility.NUMBER_OF_DAYS,
+                tester.daysFromJoining (TestUtility.JOININGDATE.plusDays (TestUtility.NUMBER_OF_DAYS))
+        );
     }
 
     @Test
     public void testDaysTillEndDate () {
-        final Customer tester = createCustomer ();
-        final String msg = "Failure - Days till end date are not the same";
+        final Customer tester = TestUtility.createCustomer ();
 
-        assertEquals (msg, NUMBER_OF_DAYS, tester.daysTillEnd (JOININGDATE));
+        assertEquals (
+                TestUtility.errorMessage ("\"Days till end date are not the same\""),
+                TestUtility.NUMBER_OF_DAYS,
+                tester.daysTillEnd (TestUtility.JOININGDATE)
+        );
     }
 
 }
