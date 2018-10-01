@@ -33,12 +33,4 @@ public abstract class TestUtility {
         return d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
-    // -----
-
-    public static String errorMessage (String msg) {
-        return String.format (
-                "Failure - %s",
-                msg
-        );
-    }
 }

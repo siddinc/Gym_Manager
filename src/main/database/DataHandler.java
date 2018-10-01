@@ -4,7 +4,6 @@ import database.models.Customer;
 
 import java.sql.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
  */
 public class DataHandler {
     // TODO: Remove hardcoded URL to Properties.
-    protected static final String DATABASE_URL = "jdbc:sqlite:/Users/vikrant/Documents/gym.db";
+    protected static final String DATABASE_URL = "jdbc:sqlite:gym.db";
 
     protected Connection conn;
 

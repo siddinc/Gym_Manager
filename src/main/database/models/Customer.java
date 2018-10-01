@@ -80,6 +80,13 @@ public class Customer {
         return ChronoUnit.DAYS.between (ref, membershipEndDate);
     }
 
+    /**
+     * @param days Number of days to add to Customer's membership.
+     */
+    public void addDaysToMembership (long days) {
+        membershipEndDate = membershipEndDate.plusDays (days);
+    }
+
     // -----
 
     @Override

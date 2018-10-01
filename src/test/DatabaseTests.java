@@ -3,11 +3,12 @@ import database.models.Customer;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -21,7 +22,10 @@ public class DatabaseTests {
     public static void setup () throws SQLException {
         final int dummyCount = 10;
 
-        dh = new DataHandler ();
+        dh = new DataHandler (String.format (
+                "jdbc:sqlite:/Users/vikrant/Documents/test%d.db",
+                new Date ().getTime ()
+        ));
 
         dummies = new ArrayList<Customer> (dummyCount);
         for (int i = 0; i < dummyCount; i++)
@@ -51,7 +55,7 @@ public class DatabaseTests {
         List<Customer> ls = dh.getList ();
 
         assertEquals (
-                TestUtility.errorMessage ("Data list is wrong."),
+                "Data list is wrong.",
                 dummies.size (),
                 ls.size ()
         );
@@ -61,53 +65,94 @@ public class DatabaseTests {
     }
 
     @Test
-    @Ignore // TODO: Remove <<<<<---------- ignore
     public void getCustomer () throws SQLException {
-        for (Customer d : dummies) {
+        // * Depends on the fact that getList test did not fail.
+        List<Customer> customerList = dh.getList ();
+        for (Customer d : customerList) {
             Customer customer = dh.getById (d.getId ());
-            String msg = TestUtility.errorMessage ("Object not same.");
+            String msg = "Object not same.";
 
-            assertNotNull (customer);
-
-            assertEquals (d.getId (), customer.getId ());
-            assertTrue (d.getFirstName ().equals (customer.getFirstName ()));
-            assertTrue (d.getLastName ().equals (customer.getLastName ()));
-            assertEquals (d.getGender (), customer.getGender ());
-
-            assertTrue (d.getBirthDate ().isEqual (customer.getBirthDate ()));
-            assertTrue (d.getJoiningDate ().isEqual (customer.getJoiningDate ()));
-            assertTrue (d.getMembershipEndDate ().isEqual (customer.getMembershipEndDate ()));
+            assertNotNull("Returned null for ID " + d.getId (), customer);
+            assertEquals (msg, d.getId (), customer.getId ());
+            assertEquals (msg, d.getGender (), customer.getGender ());
+            assertTrue   (msg, d.getFirstName ().equals (customer.getFirstName ()));
+            assertTrue   (msg, d.getLastName ().equals (customer.getLastName ()));
+            assertTrue   (msg, d.getBirthDate ().isEqual (customer.getBirthDate ()));
+            assertTrue   (msg, d.getJoiningDate ().isEqual (customer.getJoiningDate ()));
+            assertTrue   (msg, d.getMembershipEndDate ().isEqual (customer.getMembershipEndDate ()));
         }
     }
 
+    // NOTE: Updating can refer to any sort of member update.
     @Test
-    @Ignore // TODO: Remove <<<<<----- ignore
     public void updateCustomer () throws SQLException {
-        // TODO: Work.
+        List<Customer> customerList;
+        Customer c;
+
+        // Get the first customer.
+        customerList = dh.getList ();
+        c = customerList.get (0);
+        System.out.println ("BEFORE: ");
+        System.out.println (c);
+
+        // Create an entirely new customer but preserve UUID.
+        String previousId = c.getId ();
+        c = TestUtility.createCustomer ();
+        c.setId (previousId);
+
+        // Update
+        dh.updateCustomer (c);
+
+        // Check the list again.
+        c = dh.getById (previousId);
+        System.out.println ("AFTER: ");
+        System.out.println (c);
+
+        // Assertions.
+        assertEquals ("ID not the same!", previousId, c.getId ());
+    }
+
+    @Test
+    public void addPackageToCustomer () throws SQLException {
+        List<Customer> customerList = dh.getList ();;
+
+        customerList.stream ().forEach (element -> {
+            try {
+                // Store previous date.
+                LocalDate previousDate = element.getMembershipEndDate ();
+                // Add package to POJO.
+                int days = (int) Math.round (Math.random () * 100);
+                element.addDaysToMembership (days);
+                // Update database.
+                dh.updateCustomer (element);
+                // Get new customer record from database.
+                Customer c = dh.getById (element.getId ());
+                // Assertions.
+                assertTrue (
+                        "Days added not the same!",
+                        element.getMembershipEndDate ().isEqual (previousDate.plusDays (days))
+                );
+            } catch (SQLException e) {
+                e.printStackTrace ();
+            }
+        });
     }
 
     @Test
     public void deleteCustomer () throws SQLException {
         List<Customer> cs = dh.getList ();
-        assertEquals (
-                TestUtility.errorMessage ("Weird, wrong number of dummies."),
-                dummies.size (),
-                cs.size ()
-        );
-
         for (Customer d: cs)
             dh.deleteById (d.getId ());
 
         cs = dh.getList ();
         assertEquals (
-                TestUtility.errorMessage ("Not deleted."),
+                "Not deleted.",
                 0,
                 cs.size ()
         );
     }
 
     @Test
-    @Ignore
     public void dropTable () throws SQLException {
         dh.dropTable ();
     }

@@ -20,7 +20,7 @@ public class CustomerTests {
 //        final Customer tester = TestUtility.createCustomer ();
 //
 //        assertEquals (
-//                TestUtility.errorMessage ("Days from joining date are not the same"),
+//                "Days from joining date are not the same",
 //                TestUtility.NUMBER_OF_DAYS,
 //                tester.daysFromJoining (TestUtility.JOININGDATE.plusDays (TestUtility.NUMBER_OF_DAYS))
 //        );
@@ -31,10 +31,24 @@ public class CustomerTests {
 //        final Customer tester = TestUtility.createCustomer ();
 //
 //        assertEquals (
-//                TestUtility.errorMessage ("\"Days till end date are not the same\""),
+//                "\"Days till end date are not the same\"",
 //                TestUtility.NUMBER_OF_DAYS,
 //                tester.daysTillEnd (TestUtility.JOININGDATE)
 //        );
 //    }
+//
+    @Test
+    public void addPackage () {
+        Customer c = TestUtility.createCustomer ();
+        LocalDate prevDate = c.getMembershipEndDate ();
+        int days = (int) Math.round (Math.random () * 1000);
+
+        c.addDaysToMembership (days);
+
+        assertTrue (
+                "Days not added correctly.",
+                prevDate.plusDays (days).isEqual (c.getMembershipEndDate ())
+        );
+    }
 
 }
