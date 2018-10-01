@@ -1,13 +1,13 @@
 import database.DataHandler;
 import database.models.Customer;
 
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -15,14 +15,17 @@ import static org.junit.Assert.*;
 public class DatabaseTests {
 
     private static DataHandler dh;
-    private static Customer singleCustomerTester;
+    private static List<Customer> dummies;
 
     @BeforeClass
     public static void setup () throws SQLException {
+        final int dummyCount = 10;
+
         dh = new DataHandler ();
-        singleCustomerTester = TestUtility.createCustomer ();
-        System.out.println ("Created the following single tester: ");
-        System.out.println (singleCustomerTester);
+
+        dummies = new ArrayList<Customer> (dummyCount);
+        for (int i = 0; i < dummyCount; i++)
+            dummies.add (TestUtility.createCustomer ());
     }
 
     @AfterClass
@@ -39,50 +42,68 @@ public class DatabaseTests {
 
     @Test
     public void addCustomer () throws SQLException {
-        dh.addCustomer (singleCustomerTester);
+        for (Customer e : dummies)
+            dh.addCustomer (e);
     }
 
     @Test
     public void getList () throws SQLException {
         List<Customer> ls = dh.getList ();
 
-        System.out.println ("All the records: ");
-        for (Customer c : ls) {
-            System.out.println (c);
-        }
-
         assertEquals (
                 TestUtility.errorMessage ("Data list is wrong."),
-                1,
+                dummies.size (),
                 ls.size ()
         );
+
+        for (Customer c : ls)
+            System.out.println (c);
     }
 
     @Test
+    @Ignore // TODO: Remove <<<<<---------- ignore
     public void getCustomer () throws SQLException {
-        Customer customer = dh.getById (singleCustomerTester.getId ());
-        String msg = TestUtility.errorMessage ("Object not same.");
+        for (Customer d : dummies) {
+            Customer customer = dh.getById (d.getId ());
+            String msg = TestUtility.errorMessage ("Object not same.");
 
-        assertNotNull (customer);
+            assertNotNull (customer);
 
-        assertEquals (singleCustomerTester.getId (), customer.getId ());
-        assertTrue (singleCustomerTester.getFirstName ().equals (customer.getFirstName ()));
-        assertTrue (singleCustomerTester.getLastName ().equals (customer.getLastName ()));
-        assertEquals (singleCustomerTester.getGender (), customer.getGender ());
+            assertEquals (d.getId (), customer.getId ());
+            assertTrue (d.getFirstName ().equals (customer.getFirstName ()));
+            assertTrue (d.getLastName ().equals (customer.getLastName ()));
+            assertEquals (d.getGender (), customer.getGender ());
 
-        assertTrue (singleCustomerTester.getBirthDate ().isEqual (customer.getBirthDate ()));
-        assertTrue (singleCustomerTester.getJoiningDate ().isEqual (customer.getJoiningDate ()));
-        assertTrue (singleCustomerTester.getMembershipEndDate ().isEqual (customer.getMembershipEndDate ()));
+            assertTrue (d.getBirthDate ().isEqual (customer.getBirthDate ()));
+            assertTrue (d.getJoiningDate ().isEqual (customer.getJoiningDate ()));
+            assertTrue (d.getMembershipEndDate ().isEqual (customer.getMembershipEndDate ()));
+        }
     }
 
     @Test
+    @Ignore // TODO: Remove <<<<<----- ignore
     public void updateCustomer () throws SQLException {
-
+        // TODO: Work.
     }
 
     @Test
     public void deleteCustomer () throws SQLException {
-        dh.deleteById (singleCustomerTester.getId ());
+        List<Customer> cs = dh.getList ();
+        assertEquals (
+                TestUtility.errorMessage ("Weird, wrong number of dummies."),
+                dummies.size (),
+                cs.size ()
+        );
+
+        for (Customer d: cs)
+            dh.deleteById (d.getId ());
+
+        cs = dh.getList ();
+        assertEquals (
+                TestUtility.errorMessage ("Not deleted."),
+                0,
+                cs.size ()
+        );
     }
 
     @Test

@@ -15,7 +15,8 @@ import java.util.List;
  */
 public class DataHandler {
     // TODO: Remove hardcoded URL to Properties.
-    protected final String DATABASE_URL = "jdbc:sqlite:/Users/vikrant/Documents/gym.db";
+    protected static final String DATABASE_URL = "jdbc:sqlite:/Users/vikrant/Documents/gym.db";
+
     protected Connection conn;
 
     private PreparedStatement
@@ -28,12 +29,11 @@ public class DataHandler {
         dropStm;
 
     public DataHandler() throws SQLException {
-        try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace ();
-        }
-        conn = DriverManager.getConnection (DATABASE_URL);
+        this(DATABASE_URL);
+    }
+
+    public DataHandler(String url) throws SQLException {
+        conn = DriverManager.getConnection (url);
 
         createStm = conn.prepareStatement (Query.CREATE);
         // Create Table.
@@ -119,6 +119,7 @@ public class DataHandler {
         updateStm.setDate   (4, Date.valueOf (customer.getBirthDate ()));
         updateStm.setDate   (5, Date.valueOf (customer.getJoiningDate ()));
         updateStm.setDate   (6, Date.valueOf (customer.getMembershipEndDate ()));
+        updateStm.setString (7, customer.getId ());
 
         updateStm.executeUpdate ();
     }

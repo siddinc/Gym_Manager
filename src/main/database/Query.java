@@ -3,7 +3,7 @@ package database;
 /**
  * @author vikrant
  */
-public final class Query {
+public abstract class Query {
 
     public static final String
     CREATE = (
@@ -37,7 +37,7 @@ public final class Query {
     ),
 
     GET = (
-            "SELECT DISTINCT * FROM customers" +
+            "SELECT * FROM customers" +
                     " WHERE " +
                     "id = ?;"
     ),
@@ -65,9 +65,4 @@ public final class Query {
             "DELETE FROM customers;"
     );
 
-    private Query () {
-        /*
-            Object creation disallowed. (Abstract)
-         */
-    }
 }

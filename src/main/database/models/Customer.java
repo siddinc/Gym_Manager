@@ -84,7 +84,7 @@ public class Customer {
 
     @Override
     public String toString () {
-        return String.format ("%s: %s %s", id, firstName, lastName);
+        return String.format ("%s: %s %s\n Born %s\n Join %s\n End %s\n *", id, firstName, lastName, birthDate, joiningDate, membershipEndDate);
     }
 
     // -----
@@ -166,8 +166,6 @@ public class Customer {
             System.err.println (e);
             e.printStackTrace ();
         }
-
-        System.out.println (c);
 
         return c;
     }
