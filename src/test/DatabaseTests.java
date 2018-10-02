@@ -5,6 +5,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,8 +34,8 @@ public class DatabaseTests {
     }
 
     @AfterClass
-    public static void endup () throws SQLException {
-        dh.closeConnection ();
+    public static void endup () throws IOException {
+        dh.close ();
     }
 
     // -----

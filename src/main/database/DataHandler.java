@@ -53,7 +53,12 @@ public class DataHandler implements Closeable {
 
     @Override
     public void close () throws IOException {
-        conn.close ();
+        try {
+            conn.close ();
+        } catch (SQLException e) {
+            e.printStackTrace ();
+            throw new IOException (e);
+        }
     }
 
     // -----
