@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="gym-manager_main:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/gym_manager_main_jar</output-path>
+    <root id="archive" name="gym-manager_main_jar.jar">
+      <element id="module-output" name="gym-manager_main" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.xerial/sqlite-jdbc/3.21.0.1/81a0bcda2f100dc91dc402554f60ed2f696cded5/sqlite-jdbc-3.21.0.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
