@@ -4,6 +4,7 @@ import database.models.Customer;
 
 import database.DataHandler;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
@@ -46,7 +47,7 @@ public class CustomerEditor extends JDialog {
                     this,
                     "Please fill in all the details,",
                     "Invalid form",
-                    JOptionPane.ERROR_MESSAGE
+                    JOptionPane.INFORMATION_MESSAGE
             );
         });
 
@@ -111,8 +112,7 @@ public class CustomerEditor extends JDialog {
         }
 
         // Save to Database.
-        try {
-            DataHandler dh = new DataHandler ();
+        try (DataHandler dh = new DataHandler ()) {
             dh.addCustomer (c);
         } catch (SQLException e) {
             e.printStackTrace ();
@@ -123,6 +123,14 @@ public class CustomerEditor extends JDialog {
                     JOptionPane.ERROR_MESSAGE
             );
             dispose ();
+        } catch (IOException e) {
+            e.printStackTrace ();
+            JOptionPane.showMessageDialog (
+                    this,
+                    "ERROR: CHECK CONSOLE",
+                    "IOException",
+                    JOptionPane.ERROR_MESSAGE
+            );
         } finally {
 
         }

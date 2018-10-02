@@ -24,9 +24,10 @@ public class DatabaseTests {
         final int dummyCount = 10;
 
         dh = new DataHandler (String.format (
-                "jdbc:sqlite:/Users/vikrant/Documents/test%d.db",
+                "jdbc:sqlite:test%d.db",
                 new Date ().getTime ()
         ));
+//        dh = new DataHandler ();
 
         dummies = new ArrayList<Customer> (dummyCount);
         for (int i = 0; i < dummyCount; i++)
