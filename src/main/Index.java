@@ -1,10 +1,11 @@
-import database.DataHandler;
+import gui.CustomerEditor;
 
 class Index {
 
     public static void main (String [] args) {
-//        DataHandler x = new DataHandler ();
-//        x.getList ();
+        CustomerEditor e = new CustomerEditor ();
+        e.setSize (600, 400);
+        e.setVisible (true);
     }
 
 }

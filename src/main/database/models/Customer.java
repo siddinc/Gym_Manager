@@ -30,7 +30,6 @@ public class Customer {
         firstName = "John";
         lastName = "Smith";
         gender = Gender.OTHER;
-        
         birthDate = LocalDate.now ();
         joiningDate = LocalDate.now ();
         membershipEndDate = LocalDate.now ();

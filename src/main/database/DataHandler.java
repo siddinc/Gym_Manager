@@ -2,6 +2,8 @@ package database;
 
 import database.models.Customer;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.sql.*;
 
 import java.util.ArrayList;
@@ -12,7 +14,8 @@ import java.util.List;
  *
  * @author vikrant
  */
-public class DataHandler {
+public class DataHandler implements Closeable {
+
     // TODO: Remove hardcoded URL to Properties.
     protected static final String DATABASE_URL = "jdbc:sqlite:gym.db";
 
@@ -48,7 +51,8 @@ public class DataHandler {
 
     // -----
 
-    public void closeConnection () throws SQLException {
+    @Override
+    public void close () throws IOException {
         conn.close ();
     }
 
