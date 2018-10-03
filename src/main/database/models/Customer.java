@@ -1,9 +1,9 @@
 package database.models;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.Vector;
@@ -24,10 +24,10 @@ public class Customer {
     private LocalDate joiningDate;
     private LocalDate membershipEndDate;
 
-
-    // TODO: Default values.
     public Customer () {
         id = UUID.randomUUID ().toString ();
+
+        // Default values.
         firstName = "John";
         lastName = "Smith";
         gender = Gender.OTHER;
@@ -78,6 +78,27 @@ public class Customer {
      */
     public long daysTillEnd (LocalDate ref) {
         return ChronoUnit.DAYS.between (ref, membershipEndDate);
+    }
+
+    /**
+     * Returns a positive long if today's date is before birthdate.
+     * Returns a negative long if the birthdate has passed.
+     *
+     * @return Number of days till the user's birthday.
+     */
+    public long daysTillBirthday () {
+        return daysTillBirthday (LocalDate.now ());
+    }
+
+    /**
+     * Returns a positive long if reference date is before birthdate.
+     * Returns a negative long if the birthdate has passed.
+     *
+     * @param ref Reference date.
+     * @return Number of days till the user's birthday.
+     */
+    public long daysTillBirthday (LocalDate ref) {
+        return MonthDay.from (birthDate).compareTo (MonthDay.from (ref));
     }
 
     /**

@@ -51,4 +51,10 @@ public class CustomerTests {
         );
     }
 
+    @Test
+    public void testDaysTillBirthday () {
+        final Customer tester = TestUtility.createCustomer ();
+        // Todo: Write
+    }
+
 }

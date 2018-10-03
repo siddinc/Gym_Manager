@@ -8,8 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.MonthDay;
 import java.util.List;
 import java.util.Vector;
 
@@ -88,31 +86,56 @@ public class Dashboard extends JFrame {
             essentialsModel.setColumnIdentifiers (new String [] {
                     "ID",
                     "First Name",
-                    "Last Name",
-                    "Gender",
-                    "Birthdate",
-                    "Joining Date",
-                    "Membership End Date"
+                    "Event"
             });
             // Add filtered data.
             customerList.stream ()
-                    .filter (e ->
-                            e.daysTillEnd () < THRESHOLD_OF_ESSENTIALS || e.daysTillEnd () > -THRESHOLD_OF_ESSENTIALS
-                                    || MonthDay.from (e.getBirthDate ()).equals (MonthDay.from (LocalDate.now ()))
-                                    || e.daysFromJoining () % 365 < THRESHOLD_OF_ESSENTIALS
-                    )
                     .forEach (e -> {
-//                        Vector
-//                                v = e.toVector (),
-//                                vEssentials = new Vector ();
-//                        // Id.
-//                        vEssentials.add (v.get (0));
-//                        // Full name.
-//                        vEssentials.add (v.get (1) + " " + v.get (2));
-//                        // Event.
-//                        vEssentials.add ();
+                        Vector v = e.toVector ();
 
-                        essentialsModel.addRow (e.toVector ());
+                        long toBirthday = e.daysTillBirthday ();
+                        long daysJoining = e.daysFromJoining ();
+                        long daysMembershipEnd = e.daysTillEnd ();
+
+                        if (0 < toBirthday && toBirthday < THRESHOLD_OF_ESSENTIALS) {
+                            Vector vEssentials = new Vector (3);
+                            // Id.
+                            vEssentials.add (v.get (0));
+                            // Full name.
+                            vEssentials.add (v.get (1) + " " + v.get (2));
+                            // Event.
+                            if (toBirthday == 0)
+                                vEssentials.add ("Birthday!");
+                            else
+                                vEssentials.add (toBirthday + " days to birthday!");
+                            // Add to table.
+                            essentialsModel.addRow (vEssentials);
+                        }
+
+                        if (inDelta (daysJoining, THRESHOLD_OF_ESSENTIALS)) {
+                            Vector vEssentials = new Vector (3);
+                            // Id.
+                            vEssentials.add (v.get (0));
+                            // Full name.
+                            vEssentials.add (v.get (1) + " " + v.get (2));
+                            // Event.
+                            vEssentials.add ("Days from joining: " + daysJoining);
+                            // Add to table.
+                            essentialsModel.addRow (vEssentials);
+                        }
+
+                        if (inDelta (daysMembershipEnd, THRESHOLD_OF_ESSENTIALS)) {
+                            Vector vEssentials = new Vector (3);
+                            // Id.
+                            vEssentials.add (v.get (0));
+                            // Full name.
+                            vEssentials.add (v.get (1) + " " + v.get (2));
+                            // Event.
+                            vEssentials.add ("Membership end: " + daysMembershipEnd + " days");
+                            // Add to table.
+                            essentialsModel.addRow (vEssentials);
+                        }
+
                     });
         } catch (SQLException e) {
             e.printStackTrace ();
@@ -120,5 +143,14 @@ public class Dashboard extends JFrame {
             e.printStackTrace ();
         }
     }
+
+    // -----
+
+    // Utility function only.
+    private static boolean inDelta (long ref, long delta) {
+        return -delta < ref && ref < delta;
+    }
+
+    // -----
 
 }
