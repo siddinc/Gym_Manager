@@ -28,7 +28,6 @@ public class Dashboard extends JFrame {
     private static final int THRESHOLD_OF_ESSENTIALS = 14;
 
     public Dashboard () {
-
         addButton.addActionListener (e -> {
             CustomerEditor addCustomerDialog = new CustomerEditor ();
             addCustomerDialog.setSize (400, 600);
@@ -36,13 +35,35 @@ public class Dashboard extends JFrame {
             addCustomerDialog.addWindowListener (new WindowAdapter () {
                 @Override
                 public void windowClosed (WindowEvent ent) {
-                    setEnabled (true);
                     setData ();
                 }
             });
-            this.setEnabled (false);
         });
 
+        paymentButton.addActionListener (event -> {
+            // Get the customer selected in table.
+            int selectedRow = customersTable.getSelectedRow ();
+            if (selectedRow == -1) return; // no selections.
+
+            // Get ID.
+            String id = (String) customersTable.getModel ().getValueAt (selectedRow, 0);
+            Customer customer = null;
+            try (DataHandler dh = new DataHandler ()) {
+                customer = dh.getById (id);
+            } catch (IOException | SQLException e) {
+                e.printStackTrace ();
+            }
+
+            CustomerUpdater updateCustomerDialog = new CustomerUpdater (customer);
+            updateCustomerDialog.setSize (600, 300);
+            updateCustomerDialog.setVisible (true);
+            updateCustomerDialog.addWindowListener (new WindowAdapter () {
+                @Override
+                public void windowClosed (WindowEvent ent) {
+                    setData ();
+                }
+            });
+        });
     }
 
     public static void main (String[] args) {
@@ -84,8 +105,7 @@ public class Dashboard extends JFrame {
             essentialsModel.setRowCount (0);
             // Set column headers.
             essentialsModel.setColumnIdentifiers (new String [] {
-                    "ID",
-                    "First Name",
+                    "Name",
                     "Event"
             });
             // Add filtered data.
@@ -97,10 +117,8 @@ public class Dashboard extends JFrame {
                         long daysJoining = e.daysFromJoining ();
                         long daysMembershipEnd = e.daysTillEnd ();
 
-                        if (0 < toBirthday && toBirthday < THRESHOLD_OF_ESSENTIALS) {
+                        if (0 <= toBirthday && toBirthday < THRESHOLD_OF_ESSENTIALS) {
                             Vector vEssentials = new Vector (3);
-                            // Id.
-                            vEssentials.add (v.get (0));
                             // Full name.
                             vEssentials.add (v.get (1) + " " + v.get (2));
                             // Event.
@@ -114,8 +132,6 @@ public class Dashboard extends JFrame {
 
                         if (inDelta (daysJoining, THRESHOLD_OF_ESSENTIALS)) {
                             Vector vEssentials = new Vector (3);
-                            // Id.
-                            vEssentials.add (v.get (0));
                             // Full name.
                             vEssentials.add (v.get (1) + " " + v.get (2));
                             // Event.
@@ -126,8 +142,6 @@ public class Dashboard extends JFrame {
 
                         if (inDelta (daysMembershipEnd, THRESHOLD_OF_ESSENTIALS)) {
                             Vector vEssentials = new Vector (3);
-                            // Id.
-                            vEssentials.add (v.get (0));
                             // Full name.
                             vEssentials.add (v.get (1) + " " + v.get (2));
                             // Event.
@@ -137,7 +151,7 @@ public class Dashboard extends JFrame {
                         }
 
                     });
-        } catch (SQLException e) {
+        } catch (SQLException e) { // TODO: Handle differently.
             e.printStackTrace ();
         } catch (IOException e) {
             e.printStackTrace ();

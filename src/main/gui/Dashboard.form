@@ -83,7 +83,12 @@
       </grid>
       <splitpane id="35d05" binding="tablesPane">
         <constraints border-constraint="Center"/>
-        <properties/>
+        <properties>
+          <continuousLayout value="true"/>
+          <dividerSize value="3"/>
+          <lastDividerLocation value="70"/>
+          <minimumSize width="30" height="70"/>
+        </properties>
         <border type="none"/>
         <children>
           <scrollpane id="e027d" binding="essentialsScrollPane">

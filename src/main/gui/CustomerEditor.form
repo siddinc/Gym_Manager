@@ -45,7 +45,7 @@
               <gridbag weightx="0.0" weighty="1.0"/>
             </constraints>
           </vspacer>
-          <component id="37b40" class="javax.swing.JTextField" binding="dobTextField">
+          <component id="37b40" class="javax.swing.JTextField" binding="dobField">
             <constraints>
               <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -65,7 +65,7 @@
               <text value="Gender"/>
             </properties>
           </component>
-          <component id="7eb2c" class="javax.swing.JTextField" binding="firstNameTextField">
+          <component id="7eb2c" class="javax.swing.JTextField" binding="firstNameField">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -74,7 +74,7 @@
             </constraints>
             <properties/>
           </component>
-          <component id="40252" class="javax.swing.JTextField" binding="lastNameTextField">
+          <component id="40252" class="javax.swing.JTextField" binding="lastNameField">
             <constraints>
               <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>

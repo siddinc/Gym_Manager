@@ -22,9 +22,9 @@ public class CustomerEditor extends JDialog {
     private JLabel lastNameLabel;
     private JLabel dobLabel;
     private JLabel genderLabel;
-    private JTextField firstNameTextField;
-    private JTextField lastNameTextField;
-    private JTextField dobTextField;
+    private JTextField firstNameField;
+    private JTextField lastNameField;
+    private JTextField dobField;
     private JComboBox genderBox;
 
     private JPanel packagePanel;
@@ -35,6 +35,9 @@ public class CustomerEditor extends JDialog {
     private JLabel paymentLabel;
     private JTextField textField1;
     private JButton submitButton;
+
+    // -----
+    private final static Pattern daysPattern = Pattern.compile ("(\\d+)");
 
     public CustomerEditor () {
         setContentPane (contentPane);
@@ -71,13 +74,12 @@ public class CustomerEditor extends JDialog {
 
     // -----
 
-    private final static Pattern daysPattern = Pattern.compile ("(\\d+)");
-
     private void onOK () {
-        String firstName = firstNameTextField.getText ();
-        String lastName = lastNameTextField.getText ();
-        String genderString = (String) genderBox.getSelectedItem ();
-        String dateOfBirthString = dobTextField.getText ();
+        String
+                firstName           = firstNameField.getText (),
+                lastName            = lastNameField.getText (),
+                genderString        = (String) genderBox.getSelectedItem (),
+                dateOfBirthString   = dobField.getText ();
 
         // * Data validation.
         // Gender.
@@ -145,11 +147,11 @@ public class CustomerEditor extends JDialog {
 
     private boolean isEmpty () {
         return
-                firstNameTextField.getText ().isEmpty ()
+                firstNameField.getText ().isEmpty ()
                         &&
-                        lastNameTextField.getText ().isEmpty ()
+                        lastNameField.getText ().isEmpty ()
                         &&
-                        dobTextField.getText ().isEmpty ();
+                        dobField.getText ().isEmpty ();
     }
 
 }
