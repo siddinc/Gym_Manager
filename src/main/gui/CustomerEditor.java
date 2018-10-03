@@ -85,7 +85,7 @@ public class CustomerEditor extends JDialog {
         // Date of Birth.
         LocalDate dateOfBirth = null;
         try {
-             dateOfBirth = LocalDate.parse (dateOfBirthString);
+            dateOfBirth = LocalDate.parse (dateOfBirthString);
         } catch (DateTimeParseException e) {
             JOptionPane.showMessageDialog (
                     this,
@@ -131,11 +131,8 @@ public class CustomerEditor extends JDialog {
                     "IOException",
                     JOptionPane.ERROR_MESSAGE
             );
-        } finally {
-
         }
 
-        JOptionPane.showMessageDialog (this, c.toString ());
         dispose ();
     }
 
@@ -149,17 +146,10 @@ public class CustomerEditor extends JDialog {
     private boolean isEmpty () {
         return
                 firstNameTextField.getText ().isEmpty ()
-                &&
-                lastNameTextField.getText ().isEmpty ()
-                &&
-                dobTextField.getText ().isEmpty ();
+                        &&
+                        lastNameTextField.getText ().isEmpty ()
+                        &&
+                        dobTextField.getText ().isEmpty ();
     }
 
-    // For testing only. TODO: Remove
-    public static void main (String[] args) {
-        CustomerEditor dialog = new CustomerEditor ();
-        dialog.setSize (600, 400);
-        dialog.setVisible (true);
-        System.exit (0);
-    }
 }

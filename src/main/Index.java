@@ -1,11 +1,10 @@
-import gui.CustomerEditor;
+import gui.Dashboard;
+
+import javax.swing.*;
 
 class Index {
 
     public static void main (String [] args) {
-        CustomerEditor e = new CustomerEditor ();
-        e.setSize (600, 400);
-        e.setVisible (true);
     }
 
 }

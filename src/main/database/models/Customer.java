@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
+import java.util.Vector;
 
 /**
  * Customer POJO model to be saved in database.
@@ -156,10 +157,14 @@ public class Customer {
 
     // -----
 
+    /**
+     * @apiNote UNSAFE
+     * @param resultSet result set to extract data from.
+     * @return Generated customer.
+     */
     public static Customer fromResultSet (ResultSet resultSet) {
-        Customer c = null;
-
         try {
+            Customer c = null;
             c = new Customer ();
             c.id = resultSet.getString ("id");
             c.firstName = resultSet.getString ("firstname");
@@ -168,12 +173,28 @@ public class Customer {
             c.birthDate = resultSet.getDate ("birthDate").toLocalDate ();
             c.joiningDate = resultSet.getDate ("joiningDate").toLocalDate ();
             c.membershipEndDate = resultSet.getDate ("membershipEndDate").toLocalDate ();
+            return c;
         } catch (SQLException e) {
             System.err.println (e);
             e.printStackTrace ();
         }
+        return null;
+    }
 
-        return c;
+    /**
+     * @return Object converted to Object[] array for easy conversion to JTable row.
+     */
+    public Vector toVector () {
+        Vector v = new Vector ();
+        v.add (id);
+        v.add (firstName);
+        v.add (lastName);
+        v.add (gender.toString ());
+        v.add (birthDate);
+        v.add (joiningDate);
+        v.add (membershipEndDate);
+
+        return v;
     }
 
     // -----
