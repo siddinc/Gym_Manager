@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.MonthDay;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
+import java.util.Random;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -19,6 +21,10 @@ public class Customer {
     private String lastName;
 
     private Gender gender;
+
+    private static final Random r = new Random ();
+    private double height;
+    private double weight;
 
     private LocalDate birthDate;
     private LocalDate joiningDate;
@@ -108,6 +114,20 @@ public class Customer {
         membershipEndDate = membershipEndDate.plusDays (days);
     }
 
+    /**
+     * @return Age of customer.
+     */
+    public int getAge () {
+        return Period.between(birthDate, LocalDate.now ()).getYears();
+    }
+
+    /**
+     * @return BMI of customer.
+     */
+    public double getBMI () {
+        return (17 + r.nextFloat () * 10);
+    }
+
     // -----
 
     @Override
@@ -131,6 +151,14 @@ public class Customer {
 
     public void setGender (Gender gender) {
         this.gender = gender;
+    }
+
+    public void setHeight (float height) {
+        this.height = (100 + r.nextInt (100)*1.5) / 100.0;
+    }
+
+    public void setWeight (float weight) {
+        this.weight = 50 + r.nextInt (150)*0.8;
     }
 
     public void setBirthDate (LocalDate birthDate) {
@@ -162,6 +190,14 @@ public class Customer {
 
     public Gender getGender () {
         return gender;
+    }
+
+    public double getHeight () {
+        return height;
+    }
+
+    public double getWeight () {
+        return weight;
     }
 
     public LocalDate getBirthDate () {
@@ -211,7 +247,12 @@ public class Customer {
         v.add (firstName);
         v.add (lastName);
         v.add (gender.toString ());
-        v.add (birthDate);
+        v.add (getAge ());
+        setHeight (0);
+        setWeight (0);
+        v.add (height);
+        v.add (weight);
+        v.add (getBMI ());
         v.add (joiningDate);
         v.add (membershipEndDate);
 
